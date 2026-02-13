@@ -43,24 +43,11 @@ fetch(url)
   document.getElementById("requests").innerHTML = output;
 
 });
-  function markPicked(row){
-
-  const formData = new FormData();
-  formData.append("action", "markPicked");
-  formData.append("row", row);
-
-  fetch(url, {
-    method: "POST",
-    body: formData,
-    mode: "no-cors"
-  });
-
-  alert("Marked as Picked");
-  location.reload();
-}
+  
 
 
 </script>
 
 </body>
 </html>
+
