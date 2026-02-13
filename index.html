@@ -1,35 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>School Pickup Alert</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h2>Parent Pickup Alert</h2>
+<head>
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-      <form
-        action="https://script.google.com/macros/s/AKfycby4ITG439gEWPcDKGUouP36xWAO-JMoDS-pFjBLb7o6bAX-URRDMsQtcX7qVzJRErJWjQ/exec"
-        method="POST"
-      >
-        <input
-          type="text"
-          name="parent_name"
-          placeholder="Parent Name"
-          required
-        />
-        <input
-          type="text"
-          name="child_name"
-          placeholder="Child Name"
-          required
-        />
-        <input type="text" name="class" placeholder="Class" required />
-        <input type="text" name="teacher" placeholder="Teacher Name" required />
+<div class="container">
+  <h2>Pickup Requests</h2>
+  <div id="requests"></div>
+</div>
 
-        <button type="submit">I'm 5 Minutes Away</button>
-      </form>
-    </div>
-  </body>
+<script>
+
+const url = "https://script.google.com/macros/s/AKfycbxzQLylcKsySXdrlLKQ7jygMvyhKfrT_z17Y3gUYMQgK_hkr1ucf3iwU8SPklX9XcQ-hw/exec";
+
+fetch(url)
+.then(response => response.json())
+.then(data => {
+
+  let output = "";
+
+  data.forEach(item => {
+
+    if(item.status === "Waiting"){
+
+      output += `
+        <div class="card">
+          <p><strong>${item.child}</strong></p>
+          <p>Parent: ${item.parent}</p>
+          <p>Class: ${item.className}</p>
+          <p>Status: ${item.status}</p>
+          <button onclick="markPicked(${item.row})">
+            Mark as Picked
+          </button>
+        </div>
+      `;
+    }
+
+  });
+
+  document.getElementById("requests").innerHTML = output;
+
+});
+  function markPicked(row){
+
+  const formData = new FormData();
+  formData.append("action", "markPicked");
+  formData.append("row", row);
+
+  fetch(url, {
+    method: "POST",
+    body: formData,
+    mode: "no-cors"
+  });
+
+  alert("Marked as Picked");
+  location.reload();
+}
+
+
+</script>
+
+</body>
 </html>
-
